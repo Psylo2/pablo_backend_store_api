@@ -1,10 +1,10 @@
 from infrastructure.repositories.confirmation_repository import ConfirmationRepository
 from infrastructure.repositories.user_repository import UserRepository
-from infrastructure.interfaces.repositories.queries_interface import QueriesInterface
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
 from infrastructure.interfaces.repositories.repository_manager_interface import RepositoryManagerInterface
 
 
-class UserQueries(QueriesInterface):
+class UserQueries(UserQueriesInterface):
     def __init__(self, repository_services: RepositoryManagerInterface):
         self.repository_services = repository_services
 

@@ -1,9 +1,9 @@
 from infrastructure.repositories.paymanet_repository import PaymentRepository
-from infrastructure.interfaces.repositories.queries_interface import QueriesInterface
+from infrastructure.interfaces.repositories.queries.payment_queries_interface import PaymentQueriesInterface
 from infrastructure.interfaces.repositories.repository_manager_interface import RepositoryManagerInterface
 
 
-class PaymentQueries(QueriesInterface):
+class PaymentQueries(PaymentQueriesInterface):
     def __init__(self, repository_services: RepositoryManagerInterface):
         self.repository_services = repository_services
 

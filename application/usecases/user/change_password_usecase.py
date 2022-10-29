@@ -5,12 +5,12 @@ from application.interfaces.core.managers.field_validations_interface import Fie
 from application.interfaces.usecases.user.change_password_interface import ChangePasswordInterface
 from application.interfaces.usecases.managment.password_interface import PasswordInterface
 
-from infrastructure.repositories.queries.user_queries import UserQueries
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
 
 
 class ChangePasswordUseCase(ChangePasswordInterface):
     def __init__(self,
-                 repository_queries: UserQueries,
+                 repository_queries: UserQueriesInterface,
                  logger: Logger,
                  password_use_case: PasswordInterface,
                  language_manager: LanguageInterface,

@@ -8,7 +8,7 @@ from application.interfaces.core.managers.cipher_interface import CaesarCipherIn
 from application.interfaces.usecases.user.subscriber_interface import SubscriberInterface
 from application.exceptions import UserError
 
-from infrastructure.repositories.queries.subscriber_queries import SubscriberQueries
+from infrastructure.interfaces.repositories.queries.subscriber_queries_interface import SubscriberQueriesInterface
 from infrastructure.interfaces.external_api.email_interface import EmailApiInterface
 
 T_CONFIRMATION = TypeVar("T_CONFIRMATION")
@@ -20,7 +20,7 @@ EMAIL_TEXT = ""
 
 class SubscriberUseCase(SubscriberInterface):
     def __init__(self,
-                 repository_queries: SubscriberQueries,
+                 repository_queries: SubscriberQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface,
                  field_validation_manager: FieldsValidationInterface,

@@ -4,19 +4,20 @@ from logging import Logger
 from typing import TypeVar
 
 from domain.entities.pagination_entity import Pagination
+
 from application.interfaces.core.managers.language_interface import LanguageInterface
 from application.interfaces.core.managers.field_validations_interface import FieldsValidationInterface
 from application.usecases.item.decorators.function_decorators import items_display
 from application.interfaces.usecases.item.item_interface import ItemInterface, PaginatedItemsDict, Platform, Order, SortByDict
 from application.exceptions import PaginationError
 
-from infrastructure.interfaces.repositories.queries_interface import QueriesInterface, PaginationQueriesInterface
+from infrastructure.interfaces.repositories.queries.item_queries_interface import ItemQueriesInterface
 
 T_ITEM = TypeVar("T_ITEM")
 
 class ItemUseCase(ItemInterface):
     def __init__(self,
-                 repository_queries: QueriesInterface | PaginationQueriesInterface,
+                 repository_queries: ItemQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface,
                  field_validation_manager: FieldsValidationInterface):

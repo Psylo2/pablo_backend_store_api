@@ -5,14 +5,14 @@ from application.interfaces.core.managers.field_validations_interface import Fie
 from application.interfaces.usecases.managment.user_block_interface import UserBlockInterface
 from application.exceptions import AdminError, UserError
 
-from infrastructure.repositories.queries.user_queries import UserQueries
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
 
 
 class UserBlockUseCase(UserBlockInterface):
     accepted_image_mimetype: set[str] = {'image/png', 'image/jpeg', 'image/pjpeg'}
 
     def __init__(self,
-                 repository_queries: UserQueries,
+                 repository_queries: UserQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface,
                  field_validation_manager: FieldsValidationInterface):

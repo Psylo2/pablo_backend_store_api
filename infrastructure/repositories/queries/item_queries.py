@@ -1,9 +1,9 @@
 from infrastructure.repositories.item_repository import ItemRepository
-from infrastructure.interfaces.repositories.queries_interface import QueriesInterface, PaginationQueriesInterface
+from infrastructure.interfaces.repositories.queries.item_queries_interface import ItemQueriesInterface
 from infrastructure.interfaces.repositories.repository_manager_interface import RepositoryManagerInterface
 
 
-class ItemQueries(QueriesInterface, PaginationQueriesInterface):
+class ItemQueries(ItemQueriesInterface):
     def __init__(self, repository_services: RepositoryManagerInterface):
         self.repository_services = repository_services
 
@@ -14,6 +14,9 @@ class ItemQueries(QueriesInterface, PaginationQueriesInterface):
 
     def remove(self, entity: ItemRepository) -> None:
         entity.remove_from_repository()
+
+    def update(self, entity: ItemRepository) -> None:
+        entity.update_repository()
 
     def find_by(self, key: str, value: any) -> ItemRepository:
         return ItemRepository.query.filter_by(**{key: value}).first()
@@ -54,12 +57,8 @@ class ItemQueries(QueriesInterface, PaginationQueriesInterface):
 
         return ItemRepository.query.filter(_and(*filter_many)).order_by(_order(ItemRepository.id)).all()
 
-
     def insert_timestamp(self) -> float:
         return self.repository_services.insert_timestamp()
 
     def convert_timestamp(self, timestamp: float) -> str:
         return self.repository_services.convert_timestamp(timestamp=timestamp)
-
-    def update(self, entity: ItemRepository) -> None:
-        entity.update_repository()

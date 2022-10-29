@@ -3,12 +3,12 @@ from logging import Logger
 from application.interfaces.core.managers.language_interface import LanguageInterface
 from application.interfaces.usecases.user.logout_interface import LogoutInterface
 
-from infrastructure.repositories.queries.user_queries import UserQueries
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
 
 
 class LogoutUseCase(LogoutInterface):
     def __init__(self,
-                 repository_queries: UserQueries,
+                 repository_queries: UserQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface,
                  black_list_manager: set):

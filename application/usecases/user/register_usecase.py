@@ -8,13 +8,13 @@ from application.interfaces.usecases.user.register_interface import RegisterInte
 from application.interfaces.usecases.user.confirmation_interface import ConfirmationInterface
 from application.exceptions import UserError
 
-from infrastructure.repositories.queries.user_queries import UserQueries
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
 from infrastructure.external_api_services.email_api import EmailAPIException
 
 
 class RegisterUseCase(RegisterInterface):
     def __init__(self,
-                 repository_queries: UserQueries,
+                 repository_queries: UserQueriesInterface,
                  logger: Logger,
                  confirmation_use_case: ConfirmationInterface,
                  language_manager: LanguageInterface,

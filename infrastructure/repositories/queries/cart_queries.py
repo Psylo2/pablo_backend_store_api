@@ -1,9 +1,9 @@
 from infrastructure.repositories.cart_repository import CartRepository
-from infrastructure.interfaces.repositories.queries_interface import QueriesInterface
 from infrastructure.interfaces.repositories.repository_manager_interface import RepositoryManagerInterface
+from infrastructure.interfaces.repositories.queries.cart_queries_interface import CartQueriesInterface
 
 
-class CartQueries(QueriesInterface):
+class CartQueries(CartQueriesInterface):
     def __init__(self, repository_services: RepositoryManagerInterface):
         self.repository_services = repository_services
 

@@ -10,7 +10,7 @@ from application.usecases.item.decorators.function_decorators import items_displ
 from application.interfaces.usecases.managment.item_inventory_interface import ItemInventoryInterface
 from application.exceptions import ItemError, AdminError
 
-from infrastructure.repositories.queries.item_queries import ItemQueries
+from infrastructure.interfaces.repositories.queries.item_queries_interface import ItemQueriesInterface
 
 T_ITEM = TypeVar("T_ITEM")
 
@@ -22,7 +22,7 @@ class ItemInventoryUseCase(ItemInventoryInterface):
     boolean_mapper = {"true": True, "false": False}
 
     def __init__(self,
-                 repository_queries: ItemQueries,
+                 repository_queries: ItemQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface,
                  field_validation_manager: FieldsValidationInterface):

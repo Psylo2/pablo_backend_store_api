@@ -9,13 +9,13 @@ from application.interfaces.usecases.user.login_interface import LoginInterface
 from application.interfaces.usecases.user.confirmation_interface import ConfirmationInterface
 from application.exceptions import UserError
 
-from infrastructure.repositories.queries.user_queries import UserQueries
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
 
 T_USER = TypeVar("T_USER")
 
 class LoginUseCase(LoginInterface):
     def __init__(self,
-                 repository_queries: UserQueries,
+                 repository_queries: UserQueriesInterface,
                  logger: Logger,
                  confirmation_use_case: ConfirmationInterface,
                  language_manager: LanguageInterface,

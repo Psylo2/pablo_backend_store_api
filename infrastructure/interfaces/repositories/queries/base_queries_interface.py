@@ -3,7 +3,7 @@ from typing import TypeVar
 
 T = TypeVar("T")
 
-class QueriesInterface(ABC):
+class BaseQueriesInterface(ABC):
 
     @abstractmethod
     def save(self, data: dict) -> T:

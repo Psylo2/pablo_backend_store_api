@@ -4,12 +4,12 @@ from application.interfaces.core.managers.language_interface import LanguageInte
 from application.interfaces.core.managers.field_validations_interface import FieldsValidationInterface
 from application.interfaces.usecases.managment.password_interface import PasswordInterface
 
-from infrastructure.repositories.queries.user_queries import UserQueries
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
 
 
 class PasswordUseCase(PasswordInterface):
     def __init__(self,
-                 repository_queries: UserQueries,
+                 repository_queries: UserQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface,
                  field_validation_manager: FieldsValidationInterface,

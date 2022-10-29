@@ -1,9 +1,9 @@
 from infrastructure.repositories.confirmation_repository import ConfirmationRepository
-from infrastructure.interfaces.repositories.queries_interface import QueriesInterface
+from infrastructure.interfaces.repositories.queries.confirmation_queries_interface import ConfirmationQueriesInterface
 from infrastructure.interfaces.repositories.repository_manager_interface import RepositoryManagerInterface
 
 
-class ConfirmationQueries(QueriesInterface):
+class ConfirmationQueries(ConfirmationQueriesInterface):
     def __init__(self, repository_services: RepositoryManagerInterface):
         self.repository_services = repository_services
 
@@ -26,6 +26,9 @@ class ConfirmationQueries(QueriesInterface):
                                                       ).order_by(
             self.repository_services.db.desc(ConfirmationRepository.id)).all()
 
+    def update(self, entity: ConfirmationRepository) -> None:
+        entity.update_repository()
+
     def insert_timestamp(self) -> float:
         return self.repository_services.insert_timestamp()
 
@@ -41,5 +44,4 @@ class ConfirmationQueries(QueriesInterface):
             self.repository_services.func.count(ConfirmationRepository.confirmed)).filter_by(id=id).all()
         return 0 if tot[0][0] is None else tot[0][0]
 
-    def update(self, entity: ConfirmationRepository) -> None:
-        entity.update_repository()
+

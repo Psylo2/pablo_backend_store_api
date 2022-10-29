@@ -4,12 +4,12 @@ from logging import Logger
 from application.interfaces.core.managers.language_interface import LanguageInterface
 from application.interfaces.usecases.user.token_refresh_interface import TokenRefreshInterface
 
-from infrastructure.repositories.queries.user_queries import UserQueries
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
 
 
 class TokenRefreshUseCase(TokenRefreshInterface):
     def __init__(self,
-                 repository_queries: UserQueries,
+                 repository_queries: UserQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface):
         self.repository_queries = repository_queries

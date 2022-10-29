@@ -1,9 +1,9 @@
 from infrastructure.repositories.subscriber_repository import SubscriberRepository
-from infrastructure.interfaces.repositories.queries_interface import QueriesInterface
+from infrastructure.interfaces.repositories.queries.subscriber_queries_interface import SubscriberQueriesInterface
 from infrastructure.interfaces.repositories.repository_manager_interface import RepositoryManagerInterface
 
 
-class SubscriberQueries(QueriesInterface):
+class SubscriberQueries(SubscriberQueriesInterface):
     def __init__(self, repository_services: RepositoryManagerInterface):
         self.repository_services = repository_services
 

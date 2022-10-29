@@ -7,10 +7,10 @@ from application.interfaces.core.managers.cipher_interface import CaesarCipherIn
 from application.interfaces.usecases.managment.payment_interface import PaymentInterface
 from application.exceptions import AdminError, CartError, PaymentError
 
-from infrastructure.repositories.queries.payment_queries import PaymentQueries
-from infrastructure.repositories.queries.user_queries import UserQueries
-from infrastructure.repositories.queries.item_queries import ItemQueries
-from infrastructure.repositories.queries.cart_queries import CartQueries
+from infrastructure.interfaces.repositories.queries.payment_queries_interface import PaymentQueriesInterface
+from infrastructure.interfaces.repositories.queries.user_queries_interface import UserQueriesInterface
+from infrastructure.interfaces.repositories.queries.item_queries_interface import ItemQueriesInterface
+from infrastructure.interfaces.repositories.queries.cart_queries_interface import CartQueriesInterface
 from infrastructure.interfaces.external_api.payments_interface import PaymentsApiInterface
 
 
@@ -21,10 +21,10 @@ T_CHARGE = TypeVar("T_CHARGE")
 
 class PaymentUseCase(PaymentInterface):
     def __init__(self,
-                 repository_queries: PaymentQueries,
-                 cart_repository_queries: CartQueries,
-                 item_repository_queries: ItemQueries,
-                 user_repository_queries: UserQueries,
+                 repository_queries: PaymentQueriesInterface,
+                 cart_repository_queries: CartQueriesInterface,
+                 item_repository_queries: ItemQueriesInterface,
+                 user_repository_queries: UserQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface,
                  field_validation_manager: FieldsValidationInterface,

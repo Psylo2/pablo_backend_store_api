@@ -6,8 +6,8 @@ from application.interfaces.core.managers.field_validations_interface import Fie
 from application.interfaces.usecases.cart.cart_interface import CartInterface
 from application.exceptions import CartError, ItemError, AdminError
 
-from infrastructure.repositories.queries.cart_queries import CartQueries
-from infrastructure.repositories.queries.item_queries import ItemQueries
+from infrastructure.interfaces.repositories.queries.cart_queries_interface import CartQueriesInterface
+from infrastructure.interfaces.repositories.queries.item_queries_interface import ItemQueriesInterface
 
 T_ITEM = TypeVar("T_ITEM")
 T_CART = TypeVar("T_CART")
@@ -15,8 +15,8 @@ T_CART = TypeVar("T_CART")
 
 class CartUseCase(CartInterface):
     def __init__(self,
-                 repository_queries: CartQueries,
-                 item_repository_queries: ItemQueries,
+                 repository_queries: CartQueriesInterface,
+                 item_repository_queries: ItemQueriesInterface,
                  logger: Logger,
                  language_manager: LanguageInterface,
                  field_validation_manager: FieldsValidationInterface):
