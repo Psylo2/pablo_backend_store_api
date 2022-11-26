@@ -1,5 +1,6 @@
 # Shop API
 ### Documentation
+the full API specification can be found on [OPENAPI SPEC](https://github.com/Psylo2/pablo_backend_store_api/blob/master/docs/API_documentation.html)
 
 ## Authentication
 **HTTP:** *Bearer*\
