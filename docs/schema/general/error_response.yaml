@@ -1,0 +1,14 @@
+ErrorResponse:
+  title: Response Schema
+  description: Response message
+  type: object
+  properties:
+    message:
+      type: string
+      example: Error occurred.
+    details:
+      type: string
+      example: details of error
+  required:
+    - message
+    - details

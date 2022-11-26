@@ -13,6 +13,7 @@ from infrastructure.interfaces.repositories.queries.user_queries_interface impor
 
 T_USER = TypeVar("T_USER")
 
+
 class LoginUseCase(LoginInterface):
     def __init__(self,
                  repository_queries: UserQueriesInterface,
@@ -43,32 +44,27 @@ class LoginUseCase(LoginInterface):
     def is_user_confirmed(self, user: T_USER):
         return self.confirmation_use_case.is_user_confirmed(user_id=user.id)
 
-    def _find_user(self, user_data: dict) -> type | None:
-        user = self.repository_queries.find_by(key='name', value=user_data['name'])
-        if not user:
-            email = self.caesar_cipher.encrypt(text=user_data['email'])
-            user = self.repository_queries.find_by(key='email', value=email)
-        return user
+    def _find_user(self, user_data: dict) -> T_USER | None:
+        email = self.caesar_cipher.encrypt(text=user_data['email'])
+        return self.repository_queries.find_by(key='email', value=email)
 
-    def _verify_user(self, user_data: dict) -> type | None:
+    def _verify_user(self, user_data: dict) -> T_USER | None:
         user = self._find_user(user_data=user_data)
         if not user:
             return None
 
-        password_verified = self._verify_password(user_data=user_data)
+        password_verified = self._verify_password(user_data=user_data, user=user)
         if password_verified:
             return user
 
-    def _verify_password(self, user_data: dict) -> bool:
-        name = user_data['name']
+    def _verify_password(self, user_data: dict, user: T_USER) -> bool:
         password = user_data['password']
-        user = self.repository_queries.find_by(key='name', value=name)
-        is_valid_password = self.repository_queries.decrypt(str_field=password, byte_field=user.password)
-        return is_valid_password
+        return False if self.repository_queries.decrypt(str_field="", byte_field=user.password) else \
+            self.repository_queries.decrypt(str_field=password, byte_field=user.password)
 
     def _update_login_time(self, user: T_USER) -> None:
         user.last_login = self.repository_queries.insert_timestamp()
-        user.update_repository()
+        self.repository_queries.update(entity=user)
 
     @staticmethod
     def _login_payload(user: T_USER) -> dict:

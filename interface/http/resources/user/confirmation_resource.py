@@ -8,7 +8,7 @@ from interface.http.custom_parser import CustomParser
 
 
 class ConfirmationResource(Resource):
-    str_type_name_args = ("name", "email", "confirmation_id")
+    str_type_name_args = ("email", "confirmation_id")
 
     def __init__(self, *args, use_case: ConfirmationInterface, **kwargs):
         self._use_case = use_case
@@ -27,9 +27,7 @@ class ConfirmationResource(Resource):
                 return response, status_code
             return make_response(response, 200)
 
-        except UserError as err:
+        except (Exception, UserError) as err:
+            self._use_case.logger.error(f"Error: {err}")
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 401
-        except Exception as err:
-            return {"message": self._use_case.language_manager.get("error_occurred"),
-                    "details": str(err)}, 400

@@ -33,7 +33,7 @@ class SubscriberUseCase(SubscriberInterface):
         self.caesar_cipher = caesar_cipher
         self.email_api = email_api
 
-    def add_subscriber(self, data: dict) -> tuple[ dict, int]:
+    def add_subscriber(self, data: dict) -> tuple[dict, int]:
         self._validate_data(data=data)
         confirm_data = {"email": self.caesar_cipher.encrypt(text=data['email'])}
         confirmation = self.repository_queries.save(data=confirm_data)
@@ -77,21 +77,14 @@ class SubscriberUseCase(SubscriberInterface):
                f'Please click the link to confirm your subscription: ' \
                f'<a href="{link}">Email Confirmation</a></html>'
 
-        self.email_api.send_email(email=email,
-                                  subject=EMAIL_SUBJECT,
-                                  text=EMAIL_TEXT,
-                                  html=html)
+        self.email_api.send_email(email=email, subject=EMAIL_SUBJECT, text=EMAIL_TEXT, html=html)
 
     def subscriber_page(self, data: dict, confirmation: T_CONFIRMATION) -> tuple[str, None]:
         confirmation.confirm_timestamp = self.repository_queries.insert_timestamp()
         confirmation.confirmed = True
         self.repository_queries.update(entity=confirmation)
 
-        return render_template(
-            "subscriber_page.html",
-            email=data['email'],
-            url_email=self.caesar_cipher.encrypt(text=data['email'])
-        ), None
+        return render_template("subscriber_page.html", email=data['email']), None
 
     @staticmethod
     def is_already_confirmed(confirmation: T_CONFIRMATION):

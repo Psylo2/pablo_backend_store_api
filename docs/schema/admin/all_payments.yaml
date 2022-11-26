@@ -1,0 +1,9 @@
+AllPaymentsList:
+  title: Payments List Schema
+  description: List of Payment objects
+  type: object
+  properties:
+    payments:
+      type: array
+      items:
+        $ref: ../payment/payment.yaml#/Payment

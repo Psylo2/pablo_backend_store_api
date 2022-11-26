@@ -1,5 +1,6 @@
-from flask_restful import Resource, request
-from flask_jwt_extended import get_jwt_claims
+from flask import request
+from flask_restful import Resource
+from flask_jwt_extended import jwt_required, get_jwt_claims
 
 from application.interfaces.usecases.managment.item_inventory_interface import ItemInventoryInterface
 from application.exceptions import AdminError, ItemError
@@ -17,7 +18,7 @@ class ItemInventoryResource(Resource):
         self._parser = CustomParser()
         super().__init__(*args, **kwargs)
 
-    # @jwt_required
+    @jwt_required
     def post(self):
         _help = self._use_case.language_manager.get("blank_field_error")
         self._parser.add_multi_arguments(_type=str, args_names=self.str_type_name_args, required=True, _help=_help)
@@ -39,7 +40,7 @@ class ItemInventoryResource(Resource):
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 400
 
-    # @jwt_required
+    @jwt_required
     def patch(self):
         _help = self._use_case.language_manager.get("blank_field_error")
         self._parser.add_single_argument(_type=str, arg_name="title", required=True, _help=_help)
@@ -61,7 +62,7 @@ class ItemInventoryResource(Resource):
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 400
 
-    # @jwt_required
+    @jwt_required
     def delete(self):
         _help = self._use_case.language_manager.get("blank_field_error")
         self._parser.add_single_argument(_type=str, arg_name="title", required=True, _help=_help)
@@ -80,7 +81,7 @@ class ItemInventoryResource(Resource):
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 400
 
-    # @jwt_required
+    @jwt_required
     def get(self):
         _help = self._use_case.language_manager.get("blank_field_error")
         self._parser.add_single_argument(_type=int, arg_name="id", required=True, _help=_help)

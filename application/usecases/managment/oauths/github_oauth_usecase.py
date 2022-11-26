@@ -40,10 +40,10 @@ class GithubOauthUseCase(OAuthInterface):
         return self._user_authorize_payload(), 200
 
     def _user_authorize_payload(self) -> dict:
-        username = github.get('user', {}).get('login')
-        user = self.repository_queries.find_by(key='name', value=username)
+        email = github.get('user', {}).get('email')
+        user = self.repository_queries.find_by(key='email', value=email)
         if not user:
-            user = self._new_user(user_name=username)
+            user = self._new_user(email=email)
 
         return self._user_payload(user=user)
 
@@ -59,16 +59,15 @@ class GithubOauthUseCase(OAuthInterface):
                 "id": user.id,
                 "email": user.email}
 
-    def _new_user(self, user_name: str) -> type:
+    def _new_user(self, email: str) -> type:
         timestamp = self.repository_queries.insert_timestamp()
-        user_data = self._new_user_payload(user_name=user_name)
+        user_data = self._new_user_payload(email=email)
         user = self.repository_queries.save(data=user_data)
         self.password_service._handle_oauth_passwords(user_name=user.name, timestamp=timestamp)
         return user
 
-    def _new_user_payload(self, user_name: str) -> dict:
-        return {'name': user_name,
-                'email': os.urandom(8).hex(),
+    def _new_user_payload(self, email: str) -> dict:
+        return {'email': email,
                 'create_at': timestamp,
                 'last_login': timestamp}
 

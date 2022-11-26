@@ -7,7 +7,6 @@ from interface.http.custom_parser import CustomParser
 
 
 class LoginResource(Resource):
-    str_type_name_args = ("name", "email")
 
     def __init__(self, *args, use_case: LoginInterface, **kwargs):
         self._use_case = use_case
@@ -16,7 +15,7 @@ class LoginResource(Resource):
 
     def post(self):
         _help = self._use_case.language_manager.get("blank_field_error")
-        self._parser.add_multi_arguments(_type=str, args_names=self.str_type_name_args, required=False, _help=_help)
+        self._parser.add_single_argument(_type=str, arg_name='email', required=False, _help=_help)
         self._parser.add_single_argument(_type=str, arg_name='password', required=True, _help=_help)
 
         try:

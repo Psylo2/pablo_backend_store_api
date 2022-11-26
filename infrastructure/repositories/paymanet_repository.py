@@ -12,13 +12,13 @@ class PaymentRepository(db.Model, RepositoryInterface):
     amount = db.Column(db.Float(precision=2), nullable=False)
     total_quantity = db.Column(db.Integer, nullable=False)
     payment_at = db.Column(db.Float, nullable=False)
-    state = db.Column(db.Integer, nullable=True)
+    state = db.Column(db.String, nullable=True)
     transaction_id = db.Column(db.String, nullable=True)
     refund_at = db.Column(db.Float, nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     users_rel = db.relationship('UserRepository')
-    items = db.Column(MutableList.as_mutable(db.PickleType), nullable=False)
+    items = db.Column(MutableList.as_mutable(db.PickleType), nullable=False, default=[])
 
     def __init__(self, user_id: int, amount: float, payment_at: float, total_quantity: int,
                  items: list[dict], state: str, id: int | None = None):

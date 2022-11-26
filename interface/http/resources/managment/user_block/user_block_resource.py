@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask_jwt_extended import get_jwt_claims
+from flask_jwt_extended import jwt_required, get_jwt_claims
 
 from application.interfaces.usecases.managment.user_block_interface import UserBlockInterface
 from application.exceptions import AdminError, UserError
@@ -16,7 +16,7 @@ class UserBlockResource(Resource):
         self._help = self._use_case.language_manager.get("blank_field_error")
         self._parser.add_single_argument(_type=str, arg_name='user_id', required=False, _help=self._help)
 
-    # @jwt_required
+    @jwt_required
     def post(self):
         try:
             jwt_data = get_jwt_claims()
@@ -31,7 +31,7 @@ class UserBlockResource(Resource):
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 400
 
-    # @jwt_required
+    @jwt_required
     def delete(self):
         try:
             jwt_data = get_jwt_claims()

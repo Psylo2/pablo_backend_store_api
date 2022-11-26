@@ -1,0 +1,51 @@
+UserPayment:
+  description: User Payment
+  type: object
+  properties:
+    token:
+      description: Token from External API
+      type: string
+      example: uhsadmoajsdSADSA14342
+
+UserRefund:
+  description: User Refund
+  type: object
+  properties:
+    transaction_id:
+      description: Transaction ID from External API
+      type: string
+      example: uhsadmoajsdSADSA14342
+
+UserPaymentResponse:
+  description: User Payment Response
+  type: object
+  properties:
+    payment:
+      $ref: ../../payment/payment.yaml#/Payment
+
+UserRefundResponse:
+  description: User Payment Refund Response
+  type: object
+  properties:
+    refund:
+      $ref: ../../payment/payment.yaml#/Payment
+
+AllUserPaymentsList:
+  title: Payments List Schema
+  description: List of User Payment objects
+  type: object
+  properties:
+    payments:
+      type: array
+      items:
+        $ref: ../../payment/payment.yaml#/Payment
+
+AllUserRefundsList:
+  title: Refunds List Schema
+  description: List of Payment objects
+  type: object
+  properties:
+    refunds:
+      type: array
+      items:
+        $ref: ../../payment/payment.yaml#/Payment

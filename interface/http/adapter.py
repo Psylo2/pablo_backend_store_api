@@ -11,7 +11,7 @@ from interface.http.resources.user.confirmation_resource import ConfirmationReso
 from interface.http.resources.user.subscriber_resource import SubscriberResource
 from interface.http.resources.cart.cart_resource import CartResource
 from interface.http.resources.cart.cart_items_resource import CartItemsResource
-from interface.http.resources.item.item_resource import ItemResource, ItemManufacturerResource
+from interface.http.resources.item.item_resource import ItemResource, ItemManufacturerResource, ItemsResource
 from interface.http.resources.managment.promo.promo_resource import PromoResource
 from interface.http.resources.managment.user_block.user_block_resource import UserBlockResource
 from interface.http.resources.user.user_list_resource import UserListResource
@@ -39,92 +39,179 @@ class HttpAdapter:
         CORS(app=app, resources=fr'{self.API_PREFIX}/*')
         self._api = Api(app=app)
 
-    def init_api(self, use_cases: dict[str, callable]) -> None:
-        self._api.add_resource(RegisterResource, f'{self.API_PREFIX}/register',
-                               resource_class_kwargs={"use_case": use_cases['register_use_case']})
+    def init_http_adapter(self, use_cases: dict[str, callable]) -> None:
+        self._register_html_base_route()
+        self._register_html_error_route()
+        self._register_api_resources(use_cases=use_cases)
 
-        self._api.add_resource(ConfirmationResource, f'{self.API_PREFIX}/confirmation',
-                               resource_class_kwargs={"use_case": use_cases['confirmation_use_case']})
+    def _register_html_base_route(self) -> None:
+        @self._api.app.route('/')
+        def index():
+            return self._api.app.send_static_file('index.html')
 
-        self._api.add_resource(SubscriberResource, f'{self.API_PREFIX}/subscriber',
-                               resource_class_kwargs={"use_case": use_cases['subscriber_use_case']})
+    def _register_html_error_route(self) -> None:
+        @self._api.app.errorhandler(404)
+        def not_found(e):
+            return self._api.app.send_static_file('index.html')
 
-        # TODO: add confirmation model and logics
-        self._api.add_resource(LoginResource, f'{self.API_PREFIX}/login',
-                               resource_class_kwargs={"use_case": use_cases['login_use_case']})
+    def _register_api_resources(self, use_cases: dict[str, callable]) -> None:
+        resources = self._generate_resources(use_cases=use_cases)
 
-        self._api.add_resource(LogoutResource, f'{self.API_PREFIX}/logout',
-                               resource_class_kwargs={"use_case": use_cases['logout_use_case']})
+        for resource in resources:
+            self._api.add_resource(
+                resource.get('resource'),
+                f"{self.API_PREFIX}/{resource.get('url_path')}",
+                endpoint=resource.get('endpoint'),
+                resource_class_kwargs={"use_case": resource.get('use_case')},
 
-        self._api.add_resource(TokenRefreshResource, f'{self.API_PREFIX}/refresh',
-                               resource_class_kwargs={"use_case": use_cases['refresh_token_use_case']})
+            )
 
-        # TODO
-        self._api.add_resource(ChangePasswordResource, f'{self.API_PREFIX}/user/password',
-                               resource_class_kwargs={"use_case": use_cases['change_password_use_case']})
-
-        self._api.add_resource(CartResource, f'{self.API_PREFIX}/cart',
-                               resource_class_kwargs={"use_case": use_cases['cart_use_case']})
-
-        self._api.add_resource(CartItemsResource, f'{self.API_PREFIX}/cart/<int:item_id>',
-                               resource_class_kwargs={"use_case": use_cases['cart_use_case']})
-
-        self._api.add_resource(UserListResource, f'{self.API_PREFIX}/users',
-                               resource_class_kwargs={"use_case": use_cases['user_lists_use_case']})
-
-        self._api.add_resource(BlockedUserListResource, f'{self.API_PREFIX}/users/blocked',
-                               resource_class_kwargs={"use_case": use_cases['user_lists_use_case']})
-
-        self._api.add_resource(AllowedUserListResource, f'{self.API_PREFIX}/users/allowed',
-                               resource_class_kwargs={"use_case": use_cases['user_lists_use_case']})
-
-        self._api.add_resource(ItemResource, f'{self.API_PREFIX}/items',
-                               resource_class_kwargs={"use_case": use_cases['item_use_case']})
-
-        self._api.add_resource(ItemManufacturerResource, f'{self.API_PREFIX}/items-manufacture',
-                               resource_class_kwargs={"use_case": use_cases['item_use_case']})
-
-        self._api.add_resource(ItemInventoryResource, f'{self.API_PREFIX}/item-inventory',
-                               resource_class_kwargs={"use_case": use_cases['item_inventory_use_case']})
-
-        self._api.add_resource(ItemListResource, f'{self.API_PREFIX}/admin-items',
-                               resource_class_kwargs={"use_case": use_cases['item_inventory_use_case']})
-
-        self._api.add_resource(SoldItemListResource, f'{self.API_PREFIX}/admin-sold-items',
-                               resource_class_kwargs={"use_case": use_cases['item_inventory_use_case']})
-
-        self._api.add_resource(CartListResource, f'{self.API_PREFIX}/carts',
-                               resource_class_kwargs={"use_case": use_cases['cart_use_case']})
-
-        self._api.add_resource(PaymentResource, f'{self.API_PREFIX}/payment',
-                               resource_class_kwargs={"use_case": use_cases['payment_use_case']})
-
-        self._api.add_resource(PaymentRefundResource, f'{self.API_PREFIX}/refund',
-                               resource_class_kwargs={"use_case": use_cases['payment_use_case']})
-
-        self._api.add_resource(AllPaymentsResource, f'{self.API_PREFIX}/all-payments',
-                               resource_class_kwargs={"use_case": use_cases['payment_use_case']})
-
-        self._api.add_resource(PaidPaymentsResource, f'{self.API_PREFIX}/paid-payments',
-                               resource_class_kwargs={"use_case": use_cases['payment_use_case']})
-
-        self._api.add_resource(PendingPaymentsResource, f'{self.API_PREFIX}/pending-payments',
-                               resource_class_kwargs={"use_case": use_cases['payment_use_case']})
-
-        self._api.add_resource(FailPaymentsResource, f'{self.API_PREFIX}/fail-payments',
-                               resource_class_kwargs={"use_case": use_cases['payment_use_case']})
-
-        self._api.add_resource(PromoResource, f'{self.API_PREFIX}/promo',
-                               resource_class_kwargs={"use_case": use_cases['promo_use_case']})
-
-        self._api.add_resource(UserBlockResource, f'{self.API_PREFIX}/block',
-                               resource_class_kwargs={"use_case": use_cases['user_block_use_case']})
-
-        self._api.add_resource(GithubOauthResource, f'{self.API_PREFIX}/login/github/authorized/thank_you',
-                               endpoint="github.authorize",
-                               resource_class_kwargs={"use_case": use_cases['github_use_case']})
-
-        self._api.add_resource(GithubLoginApproveResource, f'{self.API_PREFIX}/login/github/authorized"',
-                               resource_class_kwargs={"use_case": use_cases['github_use_case']})
-
-        # TODO: [X] manufacturer GET ? maybe use the new endpoint with item pagination instead?
+    @staticmethod
+    def _generate_resources(use_cases: dict[str, callable]) -> list[dict]:
+        return [
+            {"resource": RegisterResource,
+             "url_path": "register",
+             "use_case": use_cases["register_use_case"]
+             },
+            {
+                "resource": ConfirmationResource,
+                "url_path": "confirmation",
+                "use_case": use_cases["confirmation_use_case"]
+            },
+            {
+                "resource": SubscriberResource,
+                "url_path": "subscriber",
+                "use_case": use_cases["subscriber_use_case"]
+            },
+            {
+                "resource": LoginResource,
+                "url_path": "login",
+                "use_case": use_cases["login_use_case"]
+            },
+            {
+                "resource": LogoutResource,
+                "url_path": "logout",
+                "use_case": use_cases["logout_use_case"]
+            },
+            {
+                "resource": TokenRefreshResource,
+                "url_path": "refresh",
+                "use_case": use_cases["refresh_token_use_case"]
+            },
+            {
+                "resource": ChangePasswordResource,
+                "url_path": "change-password",
+                "use_case": use_cases["change_password_use_case"]
+            },
+            {
+                "resource": CartResource,
+                "url_path": "cart",
+                "use_case": use_cases["cart_use_case"]
+            },
+            {
+                "resource": CartItemsResource,
+                "url_path": "cart/item",
+                "use_case": use_cases["cart_use_case"]
+            },
+            {
+                "resource": UserListResource,
+                "url_path": "users",
+                "use_case": use_cases["user_lists_use_case"]
+            },
+            {
+                "resource": BlockedUserListResource,
+                "url_path": "users/blocked",
+                "use_case": use_cases["user_lists_use_case"]
+            },
+            {
+                "resource": AllowedUserListResource,
+                "url_path": "users/allowed",
+                "use_case": use_cases["user_lists_use_case"]
+            },
+            {
+                "resource": ItemsResource,
+                "url_path": "items",
+                "use_case": use_cases["item_use_case"]
+            },
+            {
+                "resource": ItemResource,
+                "url_path": "item",
+                "use_case": use_cases["item_use_case"]
+            },
+            {
+                "resource": ItemManufacturerResource,
+                "url_path": "items-manufacture",
+                "use_case": use_cases["item_use_case"]
+            },
+            {
+                "resource": ItemInventoryResource,
+                "url_path": "item-inventory",
+                "use_case": use_cases["item_inventory_use_case"]
+            },
+            {
+                "resource": ItemListResource,
+                "url_path": "admin-items",
+                "use_case": use_cases["item_inventory_use_case"]
+            },
+            {
+                "resource": SoldItemListResource,
+                "url_path": "admin-sold-items",
+                "use_case": use_cases["item_inventory_use_case"]
+            },
+            {
+                "resource": CartListResource,
+                "url_path": "carts",
+                "use_case": use_cases["cart_use_case"]
+            },
+            {
+                "resource": PaymentResource,
+                "url_path": "payment",
+                "use_case": use_cases["payment_use_case"]
+            },
+            {
+                "resource": PaymentRefundResource,
+                "url_path": "refund",
+                "use_case": use_cases["payment_use_case"]
+            },
+            {
+                "resource": AllPaymentsResource,
+                "url_path": "all-payments",
+                "use_case": use_cases["payment_use_case"]
+            },
+            {
+                "resource": PaidPaymentsResource,
+                "url_path": "paid-payments",
+                "use_case": use_cases["payment_use_case"]
+            },
+            {
+                "resource": PendingPaymentsResource,
+                "url_path": "pending-payments",
+                "use_case": use_cases["payment_use_case"]
+            },
+            {
+                "resource": FailPaymentsResource,
+                "url_path": "fail-payments",
+                "use_case": use_cases["payment_use_case"]
+            },
+            {
+                "resource": PromoResource,
+                "url_path": "promo",
+                "use_case": use_cases["promo_use_case"]
+            },
+            {
+                "resource": UserBlockResource,
+                "url_path": "block",
+                "use_case": use_cases["user_block_use_case"]
+            },
+            {
+                "resource": GithubOauthResource,
+                "url_path": "login/github/authorized/thank_you",
+                "endpoint": "github.authorize",
+                "use_case": use_cases["github_use_case"]
+            },
+            {
+                "resource": GithubLoginApproveResource,
+                "url_path": "login/github/authorized",
+                "use_case": use_cases["github_use_case"]
+            },
+        ]

@@ -1,0 +1,65 @@
+GetSingleItem:
+  description: Get Single Item
+  type: object
+  properties:
+    id:
+      description: Item ID
+      type: integer
+      example: 7
+
+GetItems:
+  description: List of Item
+  type: object
+  properties:
+    platform:
+      description: Platform Filter
+      type: string
+      enum:
+        - pc
+        - mobile
+    sort_by:
+      description: Sort By Filter
+      type: string
+      example: {on_stock=true,on_sale=false}
+    order:
+      description: Order Filter
+      type: string
+      enum:
+        - asc
+        - desc
+
+GetManufacturerItems:
+  description: Get List of Items related to Manufacturer
+  type: object
+  properties:
+    manufacturer:
+      description: Manufacturer name
+      type: string
+      example: DEAWOO
+
+GetSingleItemResponse:
+  description: Single Item Response
+  type: object
+  properties:
+    item:
+      $ref: ../item.yaml#/Item
+
+GetManufacturerItemsResponse:
+  description: Get List of Items related to Manufacturer Response
+  type: object
+  properties:
+    items:
+      description: List of all Manufacturer Items
+      type: array
+      items:
+        $ref: ../item.yaml#/Item
+
+GetItemsResponse:
+  description: Get List of Items
+  type: object
+  properties:
+    items:
+      description: List of all Manufacturer Items
+      type: array
+      items:
+        $ref: ../item.yaml#/Item

@@ -1,0 +1,9 @@
+AllUsersList:
+  title: User List Schema
+  description: List of User objects
+  type: object
+  properties:
+    users:
+      type: array
+      items:
+        $ref: ../user/user.yaml#/User

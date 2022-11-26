@@ -39,7 +39,7 @@ class AppConfigurations(AppConfigurationInterface):
         jwt_refresh_token_minutes = int(os.environ.get('JWT_REFRESH_TOKEN_EXPIRES'))
 
         self.app.config['DEBUG'] = False
-        self.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('REPOSITORY_URI')
+        self.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         self.app.config['PROPAGATE_EXCEPTIONS'] = True
         self.app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=jwt_access_token_minutes)
@@ -64,6 +64,8 @@ class AppConfigurations(AppConfigurationInterface):
 
     def configure_file_log(self) -> None:
         folder_name = os.environ.get("LOG_FOLDER_NAME")
+        if not os.path.exists(f"./{folder_name}"):
+            os.mkdir(f"./{folder_name}")
         log_handler = CustomTimedRotatingFileHandler(folder_name=folder_name)
         self.logger.addHandler(log_handler)
 

@@ -9,7 +9,7 @@ db = repository.db
 class CartRepository(db.Model, RepositoryInterface):
     __tablename__ = 'carts'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-    items = db.Column(MutableList.as_mutable(db.PickleType), nullable=False)
+    items = db.Column(MutableList.as_mutable(db.PickleType), nullable=False, default=[])
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.Float)
     last_modified = db.Column(db.Float)

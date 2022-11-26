@@ -45,8 +45,7 @@ class PromoUseCase(PromoInterface):
 
         self._send_ads(item=item, subscribers=subscribers)
         return {"subscribers_amount": len(subscribers),
-                "item": item.title,
-                "status": "OK"}, 200
+                "item": item.title}, 201
 
     def _get_item(self, data: dict[str, str]) -> T_ITEM:
         if not self.field_validation_manager.item_name_regex(name=data['item_title']):

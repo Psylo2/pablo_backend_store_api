@@ -29,7 +29,7 @@ class RegisterUseCase(RegisterInterface):
 
     def user_register(self, user_data: dict) -> tuple:
         if self._user_exists(user_data=user_data):
-            raise UserError(self.language_manager.get("user_name_exists"))
+            raise UserError(self.language_manager.get("user_email_taken"))
 
         if not self._is_password_valid(user_data=user_data):
             raise UserError(self.language_manager.get("password_error"))
@@ -40,10 +40,9 @@ class RegisterUseCase(RegisterInterface):
         return self._user_register(user_data=user_data)
 
     def _user_exists(self, user_data: dict) -> bool:
-        user_by_name = self.repository_queries.find_by(key='name', value=user_data['name'])
         email = self.caesar_cipher.encrypt(text=user_data['email'])
-        user_by_email = self.repository_queries.find_by(key='name', value=email)
-        return True if user_by_name or user_by_email else False
+        user_by_email = self.repository_queries.find_by(key='email', value=email)
+        return bool(user_by_email)
 
     def _is_password_valid(self, user_data: dict) -> bool:
         password = user_data.get('password')
@@ -55,16 +54,18 @@ class RegisterUseCase(RegisterInterface):
 
     def _user_register(self, user_data: dict) -> tuple[dict, int]:
         data = self._enrich_user_data(user_data=user_data)
+        user = None
 
         try:
             user = self.repository_queries.save(data=data)
             user_data['id'] = user.id
             self.confirmation_use_case.send_email_confirmation(user_data=user_data)
 
-            return {'message': self.language_manager.get("user_registered").format(user_data['email'])}, 201
+            return {'message': self.language_manager.get("user_registered")}, 201
 
         except EmailAPIException as e:  # failed confirmation email
-            self.repository_queries.remove(entity=user)
+            if user:
+                self.repository_queries.remove(entity=user)
             return {"message": str(e)}, 500
 
         except Exception as err:  # failed to save user to db
@@ -73,8 +74,7 @@ class RegisterUseCase(RegisterInterface):
             return {"message": self.language_manager.get("user_internal_server_error")}, 500
 
     def _enrich_user_data(self, user_data: dict) -> dict:
-        return {'name': user_data['name'],
-                'password': self.repository_queries.encrypt(user_data['password']),
+        return {'password': self.repository_queries.encrypt(user_data['password']),
                 'email': self.caesar_cipher.encrypt(user_data['email']),
                 'create_at': self.repository_queries.insert_timestamp(),
                 'blocked': False}

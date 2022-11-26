@@ -44,10 +44,9 @@ class ConfirmationUseCase(ConfirmationInterface):
     def _prepare_email_content(self, user_data: dict, confirmation_id: str) -> None:
         link = request.url_root[:-1] + url_for(endpoint="confirmationresource",
                                                confirmation_id=self.caesar_cipher.encrypt(confirmation_id),
-                                               email=self.caesar_cipher.encrypt(user_data['email']),
-                                               name=self.caesar_cipher.encrypt(user_data['name']))
+                                               email=self.caesar_cipher.encrypt(user_data['email']))
 
-        html = f'<html>Hello {user_data["name"].capitalize()}, ' \
+        html = f'<html>Hi, ' \
                f'Please click the link to confirm your registration: ' \
                f'<a href="{link}">Email Confirmation</a></html>'
 
@@ -55,6 +54,7 @@ class ConfirmationUseCase(ConfirmationInterface):
                                   subject=EMAIL_SUBJECT,
                                   text=EMAIL_TEXT,
                                   html=html)
+        self.logger.info("Confirmation mail Sent.")
 
     def confirm(self, confirmation_data: dict) -> tuple:
         self.decrypt_confirmation_data(confirmation_data=confirmation_data)
@@ -75,11 +75,11 @@ class ConfirmationUseCase(ConfirmationInterface):
         confirmation.confirm_timestamp = self.repository_queries.insert_timestamp()
         confirmation.confirmed = True
         self.repository_queries.update(entity=confirmation)
+        self.logger.info(f"Confirmation ID {confirmation.id} status: Success.")
 
         return render_template(
             "confirmation_page.html",
-            email=confirmation_data['email'],
-            name=confirmation_data['name'].capitalize()
+            email=confirmation_data['email']
         ), None
 
     @staticmethod

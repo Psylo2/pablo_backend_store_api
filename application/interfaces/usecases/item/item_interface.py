@@ -16,3 +16,7 @@ class ItemInterface(ABC):
     @abstractmethod
     def get_items_manufacturer(self, data: dict) -> dict[list[str]]:
         ...
+
+    @abstractmethod
+    def get_item(self, data: dict) -> tuple[dict[str, dict], int]:
+        ...

@@ -8,12 +8,17 @@ from domain.entities.pagination_entity import Pagination
 from application.interfaces.core.managers.language_interface import LanguageInterface
 from application.interfaces.core.managers.field_validations_interface import FieldsValidationInterface
 from application.usecases.item.decorators.function_decorators import items_display
-from application.interfaces.usecases.item.item_interface import ItemInterface, PaginatedItemsDict, Platform, Order, SortByDict
+from application.interfaces.usecases.item.item_interface import (ItemInterface,
+                                                                 PaginatedItemsDict,
+                                                                 Platform,
+                                                                 Order,
+                                                                 SortByDict)
 from application.exceptions import PaginationError
 
 from infrastructure.interfaces.repositories.queries.item_queries_interface import ItemQueriesInterface
 
 T_ITEM = TypeVar("T_ITEM")
+
 
 class ItemUseCase(ItemInterface):
     def __init__(self,
@@ -41,6 +46,12 @@ class ItemUseCase(ItemInterface):
         items = self.repository_queries.fetch_all_sorted_by(key='manufacturer', value=data['manufacturer'])
         items_list = self._display(items=items)
         return {"items": items_list}, 200
+
+    def get_item(self, data: dict) -> tuple[dict[str, dict], int]:
+        item = self.repository_queries.find_by(key='id', value=data['id'])
+        if not item or item.sold:
+            return {}, 200
+        return {"item": item.to_dict()}, 200
 
     @items_display
     def _display(self, items: list[T_ITEM]) -> list[T_ITEM]:

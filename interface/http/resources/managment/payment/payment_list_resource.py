@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask_jwt_extended import get_jwt_claims
+from flask_jwt_extended import jwt_required, get_jwt_claims
 
 from application.interfaces.usecases.managment.payment_interface import PaymentInterface
 from application.exceptions import AdminError
@@ -9,7 +9,8 @@ class AllPaymentsResource(Resource):
         self._use_case = use_case
         super().__init__(*args, **kwargs)
 
-    # @jwt_required
+
+    @jwt_required
     def get(self):
         try:
             jwt_data = get_jwt_claims()
@@ -28,7 +29,7 @@ class PaidPaymentsResource(Resource):
         self._use_case = use_case
         super().__init__(*args, **kwargs)
 
-    # @jwt_required
+    @jwt_required
     def get(self):
         try:
             jwt_data = get_jwt_claims()
@@ -47,7 +48,7 @@ class PendingPaymentsResource(Resource):
         self._use_case = use_case
         super().__init__(*args, **kwargs)
 
-    # @jwt_required
+    @jwt_required
     def get(self):
         try:
             jwt_data = get_jwt_claims()
@@ -66,7 +67,7 @@ class FailPaymentsResource(Resource):
         self._use_case = use_case
         super().__init__(*args, **kwargs)
 
-    # @jwt_required
+    @jwt_required
     def get(self):
         try:
             jwt_data = get_jwt_claims()

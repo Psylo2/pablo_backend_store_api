@@ -1,0 +1,17 @@
+UserConfirmation:
+  title: User Confirmation Schema
+  description: User Login request body
+  type: object
+  properties:
+    email:
+      type: string
+      description: User's email
+      example: shoppa@shoppa.pro
+      pattern: ^([\w\-\.]{2,})+[^\@\.]+[@]+[^\@\.]+[\w\-\.]+[A-Za-z]+[\.][A-Za-z]+$
+    confirmation_id:
+      type: string
+      description: Confirmation ID
+      example: sadfumaihfAFcAFCQrc0q398urSADASDQ$@2314213
+  required:
+    - email
+    - confirmation_id

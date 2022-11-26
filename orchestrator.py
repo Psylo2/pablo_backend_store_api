@@ -134,11 +134,14 @@ class Orchestrator:
             caesar_cipher=self._caesar_cipher)
 
         _change_password_use_case = ChangePasswordUseCase(
-            repository_queries=self.queries_services_mapper['user_queries_service'],
+            repository_queries=self.queries_services_mapper['password_queries_service'],
+            user_repository_queries=self.queries_services_mapper['user_queries_service'],
             logger=self._logger,
             password_use_case=_password_use_case,
             language_manager=self._language_manager,
-            field_validation_manager=self._field_validator_manager)
+            field_validation_manager=self._field_validator_manager,
+            caesar_cipher=self._caesar_cipher,
+            email_api=self.external_api_services_mapper['email_api'])
 
         _logout_use_case = LogoutUseCase(
             repository_queries=self.queries_services_mapper['user_queries_service'],

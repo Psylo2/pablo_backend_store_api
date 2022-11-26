@@ -1,0 +1,52 @@
+Payment:
+  title: Payment Schema
+  description: Payment description
+  type: object
+  properties:
+    id:
+      type: integer
+      description: Payment ID
+      example: 1
+    amount:
+      type: float
+      description: Total amount of Payment
+      example: 115.0
+    total_quantity:
+      type: integer
+      description: Total quantity of products in Payment
+      example: 8
+    payment_at:
+      type: float
+      description: Payment Timestamp
+      default: 11654.200012
+    state:
+      type: string
+      description: State of Payment (paid, pending, refund)
+      nullable: true
+      example: pending
+    transaction_id:
+      type: string
+      description: Payment Transaction ID from external API
+      nullable: true
+      example: laskdmoashdmoasndasd#@$#@sda___Asdasd
+    refund_at:
+      type: float
+      description: Refund Timestamp (in case of refund only)
+      nullable: true
+      default: 11654.200012
+    user_id:
+      type: integer
+      description: User ID
+      example: 1
+    items:
+      type: array
+      description: List of Items connected to Payment
+      items:
+        $ref: ../item/item.yaml#/Item
+  required:
+    - id
+    - amount
+    - total_quantity
+    - payment_at
+    - user_id
+    - items

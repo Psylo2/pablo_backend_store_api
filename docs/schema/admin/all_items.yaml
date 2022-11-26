@@ -1,0 +1,9 @@
+AllItemsList:
+  title: Items List Schema
+  description: List of Item objects
+  type: object
+  properties:
+    items:
+      type: array
+      items:
+        $ref: ../item/item.yaml#/Item

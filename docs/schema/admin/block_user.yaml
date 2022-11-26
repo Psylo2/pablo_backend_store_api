@@ -1,0 +1,16 @@
+BlockUser:
+  type: object
+  properties:
+    user_id:
+      type: integer
+      description: User ID to Block/Unlock
+      example: 1
+
+BlockUserValidResponse:
+  type: object
+  properties:
+    message:
+      type: string
+      example: "User Blocked/Unblocked Successfully"
+  required:
+    - message

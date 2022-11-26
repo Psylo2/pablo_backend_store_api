@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask_jwt_extended import get_raw_jwt
+from flask_jwt_extended import get_raw_jwt, jwt_required
 
 from application.interfaces.usecases.user.logout_interface import LogoutInterface
 
@@ -8,7 +8,7 @@ class LogoutResource(Resource):
         self._use_case = use_case
         super().__init__(*args, **kwargs)
 
-    # @jwt_required
+    @jwt_required
     def post(self):
         try:
             data = get_raw_jwt()

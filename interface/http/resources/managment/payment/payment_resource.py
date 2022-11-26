@@ -24,9 +24,12 @@ class PaymentResource(Resource):
             response, status_code = self._use_case.payment(identity=user_id, data=parse_data)
             return response, status_code
 
-        except (UserError, CartError) as err:
+        except UserError as err:
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 401
+        except CartError as err:
+            return {"message": self._use_case.language_manager.get("error_occurred"),
+                    "details": str(err)}, 402
         except Exception as err:
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 400
@@ -60,14 +63,17 @@ class PaymentRefundResource(Resource):
             response, status_code = self._use_case.full_refund(identity=user_id, data=parse_data)
             return response, status_code
 
-        except (UserError, PaymentError) as err:
+        except UserError as err:
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 401
+        except PaymentError as err:
+            return {"message": self._use_case.language_manager.get("error_occurred"),
+                    "details": str(err)}, 402
         except Exception as err:
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 400
 
-    # @jwt_required
+    @jwt_required
     def get(self):
         try:
             user_id = get_jwt_identity()

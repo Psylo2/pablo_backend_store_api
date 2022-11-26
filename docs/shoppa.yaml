@@ -1,0 +1,1060 @@
+openapi: '3.0.0'
+info:
+  version: '0.1'
+  title: OpenAPI Specification
+  description: API Documentation
+
+tags:
+  - name: Admin
+    description: Admin Endpoints
+  - name: User
+    description: Users Endpoints
+  - name: Confirmation
+    description: Confirmation Endpoints
+  - name: Item
+    description: Item Endpoints
+
+paths:
+  /api/v1/register:
+    post:
+      tags:
+        - User
+      description: User Registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '200':
+          description: Successfully registration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegistrationValidResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: No connection Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/login:
+    post:
+      tags:
+        - User
+      description: User Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: Successfully login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLoginValidResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/logout:
+    post:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: User Logout
+      responses:
+        '200':
+          description: Successfully Logout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLogoutValidResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/refresh:
+    get:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: User Token Refresh
+      responses:
+        '200':
+          description: Successfully Refresh
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefreshValidResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/confirmation:
+    get:
+      tags:
+        - Confirmation
+      description: Registration Email Confirmation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserConfirmation'
+      responses:
+        '200':
+          description: Registration Successfully Confirm
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/change-password:
+    get:
+      tags:
+        - Confirmation
+      description: Change Password Email Confirmation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserConfirmation'
+      responses:
+        '200':
+          description: Successfully Change Password Email Confirmation
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - User
+      description: Change Password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserChangePassword'
+      responses:
+        '201':
+          description: Successfully Confirm
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserChangePasswordValidResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - User
+      description: Send Password Email Confirmation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserChangePasswordPost'
+      responses:
+        '200':
+          description: Successfully Confirm
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/subscriber:
+    get:
+      tags:
+        - Confirmation
+      description: Subscriber Email Confirmation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserConfirmation'
+      responses:
+        '200':
+          description: Registration Successfully Confirm
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - User
+      description: Register Subscriber
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberRequest'
+      responses:
+        '201':
+          description: Registration Successfully Confirm
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - User
+      description: Remove Subscriber
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscriberRequest'
+      responses:
+        '201':
+          description: Registration Successfully Confirm
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriberValidResponse'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/users:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Users List
+      responses:
+        '200':
+          description: List of User objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsersList'
+        '400':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/users/blocked:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Blocked Users List
+      responses:
+        '200':
+          description: List of User objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsersList'
+              example:
+                - id: 1
+                  email: shoppa@shoppa.pro
+                  password: AAaa1234!@
+                  blocked: true
+                  create_at: 10/10/2022
+                  last_login: 13/10/2022
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/users/allowed:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Allowed Users List
+      responses:
+        '200':
+          description: List of User objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsersList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/block:
+    post:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Block User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockUser'
+      responses:
+        '200':
+          description: User Blocked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockUserValidResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Unblock User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockUser'
+      responses:
+        '200':
+          description: User Unblocked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockUserValidResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/promo:
+    post:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Send Advertising to Subscribers
+      responses:
+        '200':
+          description: No registered subscribers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSubscribersValidResponse'
+        '201':
+          description: Advertising sent to Subscribers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromoValidResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/all-payments:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Payments List
+      responses:
+        '200':
+          description: List of Payments objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllPaymentsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/paid-payments:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Paid Payments List
+      responses:
+        '200':
+          description: List of Payments objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllPaymentsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/pending-payments:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Pending Payments List
+      responses:
+        '200':
+          description: List of Payments objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllPaymentsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/fail-payments:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description:  Fail Payments List
+      responses:
+        '200':
+          description: List of  Payments objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllPaymentsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/admin-sold-items:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Sold Items List
+      responses:
+        '200':
+          description: List of Item objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllItemsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/carts:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Carts List
+      responses:
+        '200':
+          description: List of Cart objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllCartsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/admin-items:
+    get:
+      tags:
+        - Admin
+      security:
+        - Bearer: [ ]
+      description: Available Items List
+      responses:
+        '200':
+          description: List of Items objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllItemsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Admin Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/payment:
+    get:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: User Payments
+      responses:
+        '200':
+          description: List of User pending or paid Payment objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUserPaymentsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: User Payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPayment'
+      responses:
+        '200':
+          description: User Payment object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPaymentResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '402':
+          description: Cart Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/refund:
+    get:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: User Refunds
+      responses:
+        '200':
+          description: List of User refund Payment objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUserRefundsList'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: User Refund
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRefund'
+      responses:
+        '200':
+          description: User Payment object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRefundResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: User Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '402':
+          description: Payment Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/cart:
+    get:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: Show User Cart
+      responses:
+        '200':
+          description: Show Cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShowCart'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Cart Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: Remove User Cart
+      responses:
+        '200':
+          description: Remove Cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RemoveCartResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/cart/item:
+    post:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: Add Item to Cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemToCart'
+
+      responses:
+        '200':
+          description: Show Cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemToCartResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Cart Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '402':
+          description: Item Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - User
+      security:
+        - Bearer: [ ]
+      description: Remove Item to Cart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemToCart'
+      responses:
+        '200':
+          description: Remove Cart
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemToCartResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Cart Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '402':
+          description: Item Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/item:
+    get:
+      tags:
+        - Item
+      security:
+        - Bearer: [ ]
+      description: Show Single Item
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetSingleItem'
+      responses:
+        '200':
+          description: Show Item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSingleItemResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/items-manufacture:
+    get:
+      tags:
+        - Item
+      security:
+        - Bearer: [ ]
+      description: List of Items Manufacture
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetManufacturerItems'
+      responses:
+        '200':
+          description: Show Item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetManufacturerItemsResponse'
+        '400':
+          description: General Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+#  /api/v1/items:
+#    get:
+#      tags:
+#        - Item
+#      security:
+#        - Bearer: [ ]
+#      description: List of Items to Display
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/GetItems'
+#      responses:
+#        '200':
+#          description: Show Item
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/GetManufacturerItemsResponse'
+#        '400':
+#          description: General Error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    Bearer:
+      $ref: ./schema/general/auth.yaml#/BearerAuth
+  schemas:
+    User:
+      $ref: ./schema/user/user.yaml#/User
+    Confirmation:
+      $ref: ./schema/confirmation/confirmation.yaml#/Confirmation
+    Payment:
+      $ref: ./schema/payment/payment.yaml#/Payment
+    Cart:
+      $ref: ./schema/cart/cart.yaml#/Cart
+    Item:
+      $ref: ./schema/item/item.yaml#/Item
+    ErrorResponse:
+      $ref: ./schema/general/error_response.yaml#/ErrorResponse
+    UserRegistration:
+      $ref: ./schema/user/endpoints/register.yaml#/UserRegistration
+    UserRegistrationValidResponse:
+      $ref: ./schema/user/endpoints/register.yaml#/UserRegistrationValidResponse
+    UserLogin:
+      $ref: ./schema/user/endpoints/login.yaml#/UserLogin
+    UserLoginValidResponse:
+      $ref: ./schema/user/endpoints/login.yaml#/UserLoginValidResponse
+    UserLogoutValidResponse:
+      $ref: ./schema/user/endpoints/logout.yaml#/UserLogoutValidResponse
+    TokenRefreshValidResponse:
+      $ref: ./schema/user/endpoints/refresh.yaml#/TokenRefreshValidResponse
+    UserConfirmation:
+      $ref: ./schema/user/endpoints/confirmation.yaml#/UserConfirmation
+    UserChangePassword:
+      $ref: ./schema/user/endpoints/change_password.yaml#/UserChangePassword
+    UserChangePasswordValidResponse:
+      $ref: ./schema/user/endpoints/change_password.yaml#/UserChangePasswordValidResponse
+    UserChangePasswordPost:
+      $ref: ./schema/user/endpoints/change_password.yaml#/UserChangePasswordPost
+    SubscriberRequest:
+      $ref: ./schema/user/endpoints/subscriber.yaml#/SubscriberRequest
+    SubscriberValidResponse:
+      $ref: ./schema/user/endpoints/subscriber.yaml#/SubscriberValidResponse
+    AllUsersList:
+      $ref: ./schema/admin/all_users.yaml#/AllUsersList
+    BlockUser:
+      $ref: ./schema/admin/block_user.yaml#/BlockUser
+    BlockUserValidResponse:
+      $ref: ./schema/admin/block_user.yaml#/BlockUserValidResponse
+    Promo:
+      $ref: ./schema/admin/promo.yaml#/Promo
+    PromoValidResponse:
+      $ref: ./schema/admin/promo.yaml#/PromoValidResponse
+    NoSubscribersValidResponse:
+      $ref: ./schema/admin/promo.yaml#/NoSubscribersValidResponse
+    AllPaymentsList:
+      $ref: ./schema/admin/all_payments.yaml#/AllPaymentsList
+    AllItemsList:
+      $ref: ./schema/admin/all_items.yaml#/AllItemsList
+    UserPayment:
+      $ref: ./schema/user/endpoints/payment.yaml#/UserPayment
+    UserRefund:
+      $ref: ./schema/user/endpoints/payment.yaml#/UserRefund
+    UserPaymentResponse:
+      $ref: ./schema/user/endpoints/payment.yaml#/UserPaymentResponse
+    UserRefundResponse:
+      $ref: ./schema/user/endpoints/payment.yaml#/UserRefundResponse
+    AllUserPaymentsList:
+      $ref: ./schema/user/endpoints/payment.yaml#/AllUserPaymentsList
+    AllUserRefundsList:
+      $ref: ./schema/user/endpoints/payment.yaml#/AllUserRefundsList
+    AllCartsList:
+      $ref: ./schema/admin/all_carts.yaml#/AllCartsList
+    ShowCart:
+      $ref: ./schema/user/endpoints/cart.yaml#/ShowCart
+    RemoveCartResponse:
+      $ref: ./schema/user/endpoints/cart.yaml#/RemoveCartResponse
+    ItemToCart:
+      $ref: ./schema/user/endpoints/cart.yaml#/ItemToCart
+    ItemToCartResponse:
+      $ref: ./schema/user/endpoints/cart.yaml#/ItemToCartResponse
+    GetSingleItem:
+      $ref: ./schema/item/endpoints/item.yaml#/GetSingleItem
+    GetSingleItemResponse:
+      $ref: ./schema/item/endpoints/item.yaml#/GetSingleItemResponse
+    GetManufacturerItems:
+      $ref: ./schema/item/endpoints/item.yaml#/GetManufacturerItems
+    GetManufacturerItemsResponse:
+      $ref: ./schema/item/endpoints/item.yaml#/GetManufacturerItemsResponse

@@ -1,0 +1,8 @@
+UserLogoutValidResponse:
+  type: object
+  properties:
+    message:
+      type: string
+      example: User successfully logged out.
+  required:
+    - message

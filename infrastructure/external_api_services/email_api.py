@@ -24,7 +24,7 @@ class EmailAPI(EmailApiInterface):
 
     @property
     def do_not_replay_email(self) -> str:
-        return f"do-not-reply@{self._email_api_domain}"
+        return f"do-not-reply@shoppa.pro"
 
     def validate_email_api_connectivity(self) -> None:
         if not self._email_api_domain or not self.__email_api_key:

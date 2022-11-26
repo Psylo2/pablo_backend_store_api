@@ -19,7 +19,8 @@ from interface.http.adapter import HttpAdapter
 from orchestrator import Orchestrator
 
 app = Flask(import_name=__name__,
-            static_folder='interface/gui/static',
+            static_folder='interface/gui/FrontEnd/build',
+            static_url_path='/',
             template_folder='interface/gui/templates')
 
 __black_list_manager = BlackList()
@@ -42,7 +43,7 @@ use_cases = orchestrator.generate_use_cases_mapper()
 logger.debug("Use Cases Initialized Successfully")
 
 http_adapter = HttpAdapter(app=app, black_list_manager=__black_list_manager)
-http_adapter.init_api(use_cases=use_cases)
+http_adapter.init_http_adapter(use_cases=use_cases)
 logger.debug("Resources Initialized Successfully")
 
 

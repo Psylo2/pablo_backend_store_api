@@ -1,0 +1,32 @@
+Cart:
+  title: Cart Schema
+  description: Cart description
+  type: object
+  properties:
+    id:
+      type: integer
+      description: Cart ID
+      example: 1
+    created_at:
+      type: float
+      description: Creation Timestamp
+      default: 11654.200012
+    last_modified:
+      type: float
+      description: LAst modification Timestamp
+      default: 11654.200012
+    user_id:
+      type: integer
+      description: User ID
+      example: 1
+    items:
+      type: array
+      description: List of Items connected to Cart
+      items:
+        $ref: ../item/item.yaml#/Item
+  required:
+    - id
+    - created_at
+    - last_modified
+    - user_id
+    - items

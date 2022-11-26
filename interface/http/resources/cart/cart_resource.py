@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from application.exceptions import CartError
 from application.interfaces.usecases.cart.cart_interface import CartInterface
 
 class CartResource(Resource):
@@ -16,6 +17,9 @@ class CartResource(Resource):
             response, status_code = self._use_case.show_cart(identity=user_id)
             return response, status_code
 
+        except CartError as err:
+            return {"message": self._use_case.language_manager.get("error_occurred"),
+                    "details": str(err)}, 403
         except Exception as err:
             return {"message": self._use_case.language_manager.get("error_occurred"),
                     "details": str(err)}, 400

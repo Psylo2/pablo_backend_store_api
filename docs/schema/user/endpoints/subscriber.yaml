@@ -1,0 +1,19 @@
+SubscriberRequest:
+  type: object
+  properties:
+    email:
+      type: string
+      description: User's email
+      example: shoppa@shoppa.pro
+      pattern: ^([\w\-\.]{2,})+[^\@\.]+[@]+[^\@\.]+[\w\-\.]+[A-Za-z]+[\.][A-Za-z]+$
+  required:
+    - email
+
+SubscriberValidResponse:
+  type: object
+  properties:
+    message:
+      type: string
+      example: Subscriber Request Processed Successfully
+  required:
+    - message

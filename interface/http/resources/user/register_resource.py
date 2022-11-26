@@ -7,7 +7,7 @@ from interface.http.custom_parser import CustomParser
 
 
 class RegisterResource(Resource):
-    str_type_name_args = ("name", "password", "email")
+    str_type_name_args = ("password", "email")
 
     def __init__(self, *args, use_case: RegisterInterface, **kwargs):
         self._use_case = use_case

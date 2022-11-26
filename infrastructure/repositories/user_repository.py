@@ -7,7 +7,6 @@ db = repository.db
 class UserRepository(db.Model, RepositoryInterface):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.LargeBinary, nullable=False)
     blocked = db.Column(db.Boolean(False), nullable=False)
@@ -15,10 +14,9 @@ class UserRepository(db.Model, RepositoryInterface):
     last_login = db.Column(db.Float, nullable=True)
     confirmation = db.relationship("ConfirmationRepository", lazy="dynamic", cascade="all, delete-orphan")
 
-    def __init__(self, name: str, email: str, password: str, blocked: bool = None, id: int = None,
+    def __init__(self, email: str, password: str, blocked: bool = None, id: int = None,
                  create_at: float = None, last_login: float = None):
         self.id = id
-        self.name = name
         self.email = email
         self.password = password
         self.create_at = create_at
@@ -38,7 +36,6 @@ class UserRepository(db.Model, RepositoryInterface):
 
     def to_dict(self) -> dict:
         return {"id": self.id,
-                "name": self.name,
                 "email": self.email,
                 "password": self.password,
                 "blocked": self.blocked,

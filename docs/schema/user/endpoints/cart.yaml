@@ -1,0 +1,128 @@
+ShowCart:
+  description: User Payment
+  type: object
+  properties:
+    items:
+      description: List of Item objects
+      type: array
+      items:
+        type: object
+        properties:
+          ids:
+            type: array
+            description: List of ID's
+            items:
+              id:
+                type: integer
+                description: Item ID
+              example:
+                - 2
+                - 5
+                - 8
+          quantity:
+            type: integer
+            description: Item Quantity
+            example: 3
+          title:
+            type: string
+            description: Item Title
+            example: JetSky SEAWOO blue
+          manufacturer:
+            type: string
+            description: Item Manufacturer
+            example: SEAWOO
+          on_sale:
+            type: boolean
+            description: Item on sale flag
+            default: False
+          on_stock:
+            type: boolean
+            description: Item on stock flag
+            default: true
+          sold:
+            type: boolean
+            description: Item sold flag
+            default: False
+          engine_hs_power:
+            type: integer
+            description: Item engine horse power
+            example: 300
+          original_price:
+            type: integer
+            description: Item Original price
+            example: 300
+          discount:
+            type: integer
+            description: Item Discount percentage
+            example: 12
+          file_path:
+            type: string
+            description: Path of Item picture file
+            default: C:\\temp\photo.png
+          new_price:
+            type: integer
+            description: Item price after Discount
+            example: 258
+          user_id:
+            type: integer
+            description: ID of the purchase User
+            nullable: true
+            example: 258
+          created_at:
+            type: string
+            description: Item creation timestamp
+            example: 10/10/2022
+          last_modified:
+            type: string
+            description: Timestamp of Item last modification
+            example: 10/10/2022
+
+        required:
+          - id
+          - title
+          - manufacturer
+          - on_sale
+          - on_stock
+          - sold
+          - engine_hs_power
+          - original_price
+          - discount
+          - file_path
+          - new_price
+    quantity:
+      description: Total Items in Cart
+      type: integer
+      example: 6
+    amount:
+      description: Total Cart Amount
+      type: integer
+      example: 2555
+
+RemoveCartResponse:
+  description: User Refund Response
+  type: object
+  properties:
+    $ref: '#/ShowCart'
+  example:
+    - items: [ ]
+      quantity: 0
+      amount: 0
+
+
+ItemToCart:
+  description: Item to Cart
+  type: object
+  properties:
+    item_id:
+      description: Item ID
+      type: integer
+      example: 7
+
+ItemToCartResponse:
+  description: Item to Cart Response
+  type: object
+  properties:
+    message:
+      description: Message
+      type: string
+      example: Item Add/Removed successfully

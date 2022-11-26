@@ -1,0 +1,37 @@
+User:
+  title: User Schema
+  description: User description
+  type: object
+  properties:
+    id:
+      type: integer
+      description: User ID
+      example: 1
+      nullable: true
+    email:
+      type: string
+      description: User Email
+      pattern: ^([\w\-\.]{2,})+[^\@\.]+[@]+[^\@\.]+[\w\-\.]+[A-Za-z]+[\.][A-Za-z]+$
+      example: shoppa@shoppa.pro
+    password:
+      type: string
+      description: User Password
+      pattern: ^(?=.*[a-z]{2,})(?=.*[A-Z]{2,})(?=.*[\d]{4,})(?=.*[!@#$%^&*-=+_]{1,})[\w!@#$%^&*-=+]{10,20}$
+      example: AAaa1234!@
+    blocked:
+      type: boolean
+      description: User Block status
+      default: false
+    create_at:
+      type: string
+      description: User registration time
+      nullable: true
+      example: 10/10/2022
+    last_login:
+      type: string
+      description: User Last Login time
+      nullable: true
+      example: 13/10/2022
+  required:
+    - email
+    - password

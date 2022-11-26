@@ -1,0 +1,9 @@
+AllCartsList:
+  title: Carts List Schema
+  description: List of Cart objects
+  type: object
+  properties:
+    carts:
+      type: array
+      items:
+        $ref: ../cart/cart.yaml#/Cart

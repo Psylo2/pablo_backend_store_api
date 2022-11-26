@@ -1,0 +1,32 @@
+Promo:
+  title: Promo Schema
+  description: Advertising items to Subscribers
+  type: object
+  properties:
+    item_title:
+      description: The item that promo advertise
+      type: string
+      example: JetSky SEAWOO blue
+
+PromoValidResponse:
+  title: Promo Valid Response Schema
+  description: Promo Valid Response
+  type: object
+  properties:
+    subscribers_amount:
+      description: The amount of subscribers that receive promo
+      type: integer
+      example: 152
+    item:
+      description: The item that promo advertise
+      type: string
+      example: JetSky SEAWOO blue
+
+NoSubscribersValidResponse:
+  title: No Subscribers Valid Response Schema
+  description: No Subscribers been registered
+  type: object
+  properties:
+    message:
+      type: string
+      example: no registered subscribers

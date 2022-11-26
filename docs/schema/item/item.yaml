@@ -1,0 +1,74 @@
+Item:
+  title: Item Schema
+  description: Item description
+  type: object
+  properties:
+    id:
+      type: integer
+      description: Item ID
+      example: 1
+    title:
+      type: string
+      description: Item Title
+      example: JetSky SEAWOO blue
+    manufacturer:
+      type: string
+      description: Item Manufacturer
+      example: SEAWOO
+    on_sale:
+      type: boolean
+      description: Item on sale flag
+      default: False
+    on_stock:
+      type: boolean
+      description: Item on stock flag
+      default: true
+    sold:
+      type: boolean
+      description: Item sold flag
+      default: False
+    engine_hs_power:
+      type: integer
+      description: Item engine horse power
+      example: 300
+    original_price:
+      type: integer
+      description: Item Original price
+      example: 300
+    discount:
+      type: integer
+      description: Item Discount percentage
+      example: 12
+    file_path:
+      type: string
+      description: Path of Item picture file
+      default: C:\\temp\photo.png
+    new_price:
+      type: integer
+      description: Item price after Discount
+      example: 258
+    user_id:
+      type: integer
+      description: ID of the purchase User
+      nullable: true
+      example: 258
+    created_at:
+      type: string
+      description: Item creation timestamp
+      example: 10/10/2022
+    last_modified:
+      type: string
+      description: Timestamp of Item last modification
+      example: 10/10/2022
+  required:
+    - id
+    - title
+    - manufacturer
+    - on_sale
+    - on_stock
+    - sold
+    - engine_hs_power
+    - original_price
+    - discount
+    - file_path
+    - new_price

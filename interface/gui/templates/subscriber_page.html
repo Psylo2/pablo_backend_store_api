@@ -5,25 +5,53 @@
     <title>Subscriber Confirmation</title>
     <link href="{{url_for('static', filename='subscriber_page.css')}}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="subscriber_page.css">
 </head>
 <body>
 
   <div class="container-fluid">
-    <div class="jumbotron text-center full-height">
+    <div id='addDiv' class="jumbotron text-center full-height">
       <h1>Thank You</h1>
-      <p><em>Your Subscription has been confirmed through < {{ email }} >.</em></p>
+      <p><em>Your Subscription has been confirmed through <span id="userEmail">< {{ email }}</span> ></em></p>
     </div>
+
+      <div id='removeDiv' class="jumbotron text-center full-height hide">
+          <h1>Your subscription has been removed Thank You</h1>
+          <p><em>Your Subscription has been removed through <span id="userEmailRemove">< {{ email }}</span> ></em></p>
+      </div>
 
     <footer class="text-center">
       <hr>
-      <p><a href="http://127.0.0.1:5000/api/v1/subscription?email={{ url_email }}" target="_blank" methods="DELETE">Remove Subscription</a></p>
+      <p><a id="remove" href="http://0.0.0.0:5000/api/v1/subscriber?email={{ email }}" target="_blank" methods="delete">Remove Subscription</a></p>
     </footer>
 
     <footer class="text-center">
       <hr>
-      <p><a href="http://127.0.0.1:5000/" target="_blank">ShoPPa Store</a></p>
+      <p><a href="http://0.0.0.0:5000/" target="_blank">ShoPPa Store</a></p>
     </footer>
   </div>
 
 </body>
 </html>
+<script>
+    document.getElementById("remove").addEventListener("click", function(event){
+        event.preventDefault();
+        let userEmailElement = document.getElementById("userEmail");
+        let userEmail=userEmailElement.textContent
+        let addDiv=document.getElementById("addDiv");
+        let removeDiv=document.getElementById("removeDiv");
+        let removeLink=document.getElementById("remove");
+        fetch(`http://127.0.0.1:5000/api/v1/subscriber?email={{ email }}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userEmailField: userEmail,
+            }),
+        })
+        addDiv.classList.add("hide");
+        removeDiv.classList.remove("hide");
+        removeLink.classList.add("hide");
+    });
+</script>

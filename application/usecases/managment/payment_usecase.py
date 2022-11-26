@@ -78,7 +78,7 @@ class PaymentUseCase(PaymentInterface):
         [self.item_repository_queries.update(item) for item in items]
         self.cart_repository_queries.remove(entity=cart)
 
-        return payment.to_dict(), 200
+        return {"payment": payment.to_dict()}, 200
 
     def full_refund(self, identity: any, data: dict) -> tuple:
         transaction_id = data['transaction_id']
@@ -101,7 +101,7 @@ class PaymentUseCase(PaymentInterface):
             item.last_modified = self.repository_queries.insert_timestamp()
             self.item_repository_queries.update(entity=item)
 
-        return payment.to_dict(), 200
+        return {"refund": payment.to_dict()}, 200
 
     def get_user_payments(self, identity: any) -> tuple:
         user_payments = self.repository_queries.fetch_all_sorted_by(key="user_id", value=identity)
@@ -116,22 +116,22 @@ class PaymentUseCase(PaymentInterface):
     def all_payments(self, jwt_data: dict) -> tuple:
         self._check_admin_privilege(jwt_data=jwt_data)
         all_payments = self.repository_queries.fetch_all()
-        return {"all_payments": all_payments}, 200
+        return {"payments": all_payments}, 200
 
     def paid_payments(self, jwt_data: dict) -> tuple:
         self._check_admin_privilege(jwt_data=jwt_data)
         paid_payments = self.repository_queries.fetch_all_sorted_by(key="state", value="paid")
-        return {"paid_payments": paid_payments}, 200
+        return {"payments": paid_payments}, 200
 
     def pending_payments(self, jwt_data: dict) -> tuple:
         self._check_admin_privilege(jwt_data=jwt_data)
         pending_payments = self.repository_queries.fetch_all_sorted_by(key="state", value="pending")
-        return {"pending_payments": pending_payments}, 200
+        return {"payments": pending_payments}, 200
 
     def fail_payments(self, jwt_data: dict) -> tuple:
         self._check_admin_privilege(jwt_data=jwt_data)
         fail_payments = self.repository_queries.fetch_all_sorted_by(key="state", value="fail")
-        return {"fail_payments": fail_payments}, 200
+        return {"payments": fail_payments}, 200
 
     def _check_admin_privilege(self, jwt_data: dict) -> None:
         if not jwt_data['is_admin']:

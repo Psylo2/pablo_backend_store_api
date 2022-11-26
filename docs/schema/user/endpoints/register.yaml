@@ -1,0 +1,27 @@
+UserRegistration:
+  title: User Registration Schema
+  description: User Registration request body
+  type: object
+  properties:
+    email:
+      type: string
+      description: User's email
+      example: shoppa@shoppa.pro
+      pattern: ^([\w\-\.]{2,})+[^\@\.]+[@]+[^\@\.]+[\w\-\.]+[A-Za-z]+[\.][A-Za-z]+$
+    password:
+      type: string
+      description: User's password
+      example: AAaa1234!@
+      pattern: ^(?=.*[a-z]{2,})(?=.*[A-Z]{2,})(?=.*[\d]{4,})(?=.*[!@#$%^&*-=+_]{1,})[\w!@#$%^&*-=+]{10,20}$
+  required:
+    - email
+    - password
+
+UserRegistrationValidResponse:
+  type: object
+  properties:
+    message:
+      type: string
+      example: "User successfully Registered!"
+  required:
+    - message

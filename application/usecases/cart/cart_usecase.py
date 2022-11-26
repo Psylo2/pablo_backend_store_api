@@ -28,12 +28,14 @@ class CartUseCase(CartInterface):
 
     def show_cart(self, identity: any) -> tuple:
         cart = self.repository_queries.find_by(key='user_id', value=identity)
+        if not cart:
+            return self._empty_cart_payload(), 200
         return self._show_cart_payload(cart=cart), 200
 
     def remove_cart(self, identity: any) -> tuple:
         cart = self.repository_queries.find_by(key='user_id', value=identity)
         self.repository_queries.remove(entity=cart)
-        return {"message": self.language_manager.get("cart_removed")}, 200
+        return self._empty_cart_payload(), 200
 
     def add_item(self, data: dict) -> tuple:
         cart = self.repository_queries.find_by(key="user_id", value=data["user_id"])
@@ -45,14 +47,9 @@ class CartUseCase(CartInterface):
             raise ItemError(self.language_manager.get("item_not_available"))
 
         cart = self._create_cart(data=data) if not cart else cart
-
-        for item_dict in cart.items:
-            item_id = item_dict['id']
-
-            if item_id == item.id:
-                raise CartError(self.language_manager.get("item_already_in_cart"))
-
+        self._check_item_in_cart(item=item, cart=cart)
         self._append_item_to_cart(item=item, cart=cart)
+
         return {"message": self.language_manager.get("item_added_to_cart")}, 200
 
     def remove_item(self, data: dict) -> tuple:
@@ -74,33 +71,78 @@ class CartUseCase(CartInterface):
         carts_list = self.repository_queries.fetch_all()
         return {"carts": carts_list}, 200
 
+    @staticmethod
+    def _empty_cart_payload() -> dict[str, list | int]:
+        return {
+            'items': [],
+            'quantity': 0,
+            'amount': 0
+        }
+
     def _remove_item_to_cart(self, item: T_ITEM, cart: T_CART) -> None:
         cart.items.remove(item.to_dict())
         self.repository_queries.update(entity=cart)
 
     def _show_cart_payload(self, cart: T_CART) -> dict:
         total_amount = 0
-        items = []
+        total_quantity = 0
+        item_titles: dict[str, dict] = {}
+
         for item_dict in cart.items:
             item = self.item_repository_queries.find_by(key="id", value=item_dict['id'])
             if item.sold:
                 continue
 
+            self._enrich_item_display(item=item, item_titles=item_titles)
+            total_quantity += 1
             total_amount += item.new_price
-            items.append(item)
 
+        items = [v for k, v in item_titles.items()]
         return self._cart_payload(items=items, total_amount=total_amount)
 
+    def _enrich_item_display(self, item: T_ITEM, item_titles: dict[str, dict]) -> None:
+        updated_item_dict = item.to_dict()
+        item_by_title = item_titles.get(item.title)
+
+        if not item_by_title:
+            updated_item_dict['ids'] = [updated_item_dict.pop('id')]
+            updated_item_dict['quantity'] = 1
+            item_titles.update({item.title: updated_item_dict})
+            return
+
+        ids = item_titles[item.title]['ids']
+        if item.id in ids:
+            raise CartError(self.language_manager.get("item_already_in_cart"))
+        item_titles[item.title]['ids'].append(updated_item_dict.pop('id'))
+        item_titles[item.title]['quantity'] += 1
+
     @staticmethod
-    def _cart_payload(items: list[T_ITEM], total_amount: int) -> dict:
-        return {'items': [item.to_dict() for item in items],
-                'quantity': len(items),
+    def _cart_payload(items: list[dict], total_amount: int) -> dict:
+        quantity_list = [item['quantity'] for item in items]
+
+        return {'items': items,
+                'quantity': sum(quantity_list),
                 'amount': total_amount}
 
-    def _remove_all_cart_items(self, cart: T_CART) -> None:
-        for item in cart.items:
-            item.user_is = None
-            self.item_repository_queries.update(entity=item)
+    def _check_item_in_cart(self, item: T_ITEM, cart: T_CART) -> None:
+        exists_items_id = []
+        for item_dict in cart.items:
+            item_id = item_dict['id']
+            if item_id in exists_items_id:
+                continue
+
+            if item_id == item.id:
+                all_title_items = self.item_repository_queries.fetch_all_sorted_by(key="title", value=item.title)
+                same_items = [item for item in all_title_items if not item.sold]
+                if not same_items:
+                    raise CartError(self.language_manager.get("item_already_in_cart"))
+
+                for same_item in same_items:
+                    if not same_item.sold and same_item.id not in exists_items_id:
+                        item_dict['id'] = same_item.id
+                        break
+
+            exists_items_id.append(item_id)
 
     def _append_item_to_cart(self, item: T_ITEM, cart: T_CART) -> None:
         cart.items.append(item.to_dict())

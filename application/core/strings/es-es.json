@@ -10,9 +10,8 @@
   "user_deleted": "User is been Deleted",
   "user_logout": "User successfully logged out.",
   "user_already_block": "User already in block list",
-  "user_password_updated": "Password has been changed successfully.",
+  "user_password_confirmation": "Password change confirmation been sent to email.",
   "user_email_taken": "Email already exists.",
-  "user_name_exists": "Username already in use.",
   "username_error": "Name must be no less then 4 Letters",
   "email_error": "Invalid Email Address",
   "password_error": "Password must contain 1 Upper 1 Lower 1 Digit 1 Special, and between 10 and 16 characters",
@@ -41,5 +40,7 @@
   "item_added_to_cart": "Item added to cart.",
   "payment_currency": "EUR",
   "item_removed": "Item removed",
-  "subscriber_registered": "Subscriber successfully Registered! please confirm registration on {}"
+  "subscriber_registered": "Subscriber successfully Registered! please confirm registration on {}",
+  "password_in_history": "Password was in use.",
+  "cart_removed": "Cart Removed successfully."
 }

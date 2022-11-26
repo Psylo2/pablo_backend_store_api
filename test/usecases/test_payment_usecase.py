@@ -9,22 +9,22 @@ class TestPaymentUseCaseUseCase(TestCase):
     def setUp(self) -> None:
         ...
 
-    def test_apply_payment(self) -> None:
+    def test_payment(self) -> None:
         ...
 
-    def test_get_payment_status(self) -> None:
+    def test_refund(self) -> None:
         ...
 
-    def test_show_bill(self) -> None:
+    def test_all_payments(self) -> None:
         ...
 
-    def test_apply_refund(self) -> None:
+    def test_all_paid(self) -> None:
         ...
 
-    def test_payments_list(self) -> None:
+    def test_all_pending(self) -> None:
         ...
 
-    def test_refunds_list(self) -> None:
+    def test_all_fail(self) -> None:
         ...
 
     def tearDown(self) -> None:
