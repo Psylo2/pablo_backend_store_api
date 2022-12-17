@@ -6,7 +6,7 @@ from typing import TypeVar
 
 from application.interfaces.core.managers.language_interface import LanguageInterface
 from application.interfaces.core.managers.field_validations_interface import FieldsValidationInterface
-from application.usecases.item.decorators.function_decorators import items_display, sold_items_display
+from application.usecases.item.decorators.function_decorators import items_display
 from application.interfaces.usecases.managment.item_inventory_interface import ItemInventoryInterface
 from application.exceptions import ItemError, AdminError
 
@@ -109,7 +109,7 @@ class ItemInventoryUseCase(ItemInventoryInterface):
     def _display(self, items: list[T_ITEM]) -> list[T_ITEM]:
         return items
 
-    @sold_items_display
+    @items_display(include_sold=True)
     def _display_only_sold(self, items: list[T_ITEM]) -> list[T_ITEM]:
         return items
 

@@ -3,7 +3,7 @@ from typing import TypeVar
 T_ITEM = TypeVar("T_ITEM")
 
 
-def __add_item_to_display(item: T_ITEM, items_result: dict) -> None:
+def __item_display(item: T_ITEM, items_result: dict[str, any]) -> None:
     item_title = item.title
 
     if item_title not in items_result:
@@ -16,40 +16,22 @@ def __add_item_to_display(item: T_ITEM, items_result: dict) -> None:
     items_result[item_title]['ids'].append(item.id)
     items_result[item_title]['quantity'] += 1
 
+def items_display(include_sold: bool = False) -> callable:
+    def decorator(func):
+        def _display(items: list[T_ITEM]) -> list[dict[str, any]]:
+            items_result = {}
 
-def sold_items_display(func):
-    def _display_sold(items: list[T_ITEM]) -> list[dict]:
-        items_result = {}
+            for item in items:
+                if item.sold and not include_sold:
+                    continue
 
-        for item in items:
-            if not item.sold:
-                continue
+                __item_display(item=item, items_result=items_result)
 
-            __add_item_to_display(item=item, items_result=items_result)
+            return list(items_result.values())
 
-        return list(items_result.values())
+        def inner(*args, **kwargs) -> list[dict[str, any]]:
+            items = func(*args, **kwargs)
+            return _display(items=items)
 
-    def inner(*args, **kwargs) -> list[dict]:
-        items = func(*args, **kwargs)
-        return _display_sold(items=items)
-
-    return inner
-
-
-def items_display(func):
-    def _display(items: list[T_ITEM]) -> list[dict]:
-        items_result = {}
-
-        for item in items:
-            if item.sold:
-                continue
-
-            __add_item_to_display(item=item, items_result=items_result)
-
-        return list(items_result.values())
-
-    def inner(*args, **kwargs) -> list[dict]:
-        items = func(*args, **kwargs)
-        return _display(items=items)
-
-    return inner
+        return inner
+    return decorator
