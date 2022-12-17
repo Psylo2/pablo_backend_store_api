@@ -43,5 +43,6 @@ class PaymentsAPI(PaymentsApiInterface):
             "receipt_email": email,
             "source": token}
 
-    def _refund_payload(self, payment: PaymentEntity) -> dict:
+    @staticmethod
+    def _refund_payload(payment: PaymentEntity) -> dict:
         return {"charge": payment.transaction_id}
