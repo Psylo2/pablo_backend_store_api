@@ -42,5 +42,6 @@
   "item_removed": "Item removed",
   "subscriber_registered": "Subscriber successfully Registered! please confirm registration on {}",
   "password_in_history": "Password was in use.",
-  "cart_removed": "Cart Removed successfully."
+  "cart_removed": "Cart Removed successfully.",
+  "item_already_in_cart": "Item already in Cart"
 }
