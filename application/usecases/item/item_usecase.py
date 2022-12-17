@@ -1,7 +1,7 @@
 import json
 from urllib.parse import unquote
 from logging import Logger
-from typing import TypeVar
+from typing import TypeVar, Generator, Iterator, Any
 
 from domain.entities.pagination_entity import Pagination
 
@@ -38,7 +38,7 @@ class ItemUseCase(ItemInterface):
 
         items = repository_query(order=order, sort_by=sort_by)
         items_list = self._display(items=items)
-        paginated_items_dict = self._paginate_item_list(platform=platform, items_list=items_list)
+        paginated_items_dict = self._paginate_items(platform=platform, items_list=items_list)
 
         return paginated_items_dict, 200
 
@@ -73,7 +73,7 @@ class ItemUseCase(ItemInterface):
 
             sort_by = json.loads(sort_by)
             for key, value in sort_by.items():
-                if not isinstance(value, (int, str, bool)):
+                if not isinstance(value, (int, str)):
                     raise PaginationError(f"Invalid value for sort_by ({key}: {value})")
 
                 if key not in {"on_stock", "price", "manufacturer", "engine_hs_power", "on_sale"}:
@@ -84,15 +84,26 @@ class ItemUseCase(ItemInterface):
 
         return platform, sort_by, order
 
-    @staticmethod
-    def _paginate_item_list(platform: Platform, items_list: list[dict]) -> PaginatedItemsDict:
+    def _paginate_items(self, platform: Platform, items_list: list[dict]) -> PaginatedItemsDict:
         chunk_per_page: int = Pagination[platform.upper()].value
-        page = 1
         paginated_items = {}
-        for index in range(0, len(items_list), chunk_per_page):
-            paginated_items.update(
-                {page: items_list[index:index + chunk_per_page]}
-            )
-            page += 1
 
+        for page, items in enumerate(
+                self._pagination_generator(items_list=items_list, chunk_size=chunk_per_page)
+        ):
+            paginated_items[page + 1] = items
         return paginated_items
+
+    @staticmethod
+    def _pagination_generator(items_list: Iterator, chunk_size: int) -> Generator[list[dict], Any, None]:
+        page = []
+        for item in items_list:
+            page.append(item)
+
+            if len(page) == chunk_size:
+                yield page
+                page = []
+
+        if page:
+            yield page
+
