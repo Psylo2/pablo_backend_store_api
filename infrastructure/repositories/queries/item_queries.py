@@ -36,7 +36,6 @@ class ItemQueries(ItemQueriesInterface):
         filter_many = []
         _and = self.repository_services.db.and_
         _order = self.repository_services.db.asc if order == "asc" else self.repository_services.db.desc
-        filter_many.append(ItemRepository.user_id is None)
 
         if sort_by.get('on_stock'):
             filter_many.append(ItemRepository.on_stock == sort_by['on_stock'])
